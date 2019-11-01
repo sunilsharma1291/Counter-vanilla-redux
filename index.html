@@ -1,0 +1,89 @@
+<!Doctype html>
+<html>
+    <head></head>
+    <title>Redux basic example</title>
+    <script src="https://unpkg.com/redux@latest/dist/redux.min.js"></script>
+    <body>
+        <div>
+            <p>
+              Clicked: <span id="valueItem">0</span> times
+            </p>
+            <button id="increment">+</button>
+            <button id="decrement">-</button>
+            <button id="incrementIfOdd">Increment if odd</button>
+            <button id="incrementAsync">Increment async</button>
+          </div>
+
+          <script>
+            // Define Actions
+            const INCREMENT = {
+                    type: 'INCREMENT'
+                };
+            
+            const DECREMENT = {
+                    type: 'DECREMENT'
+                };
+            
+            // Define Action Creators
+
+            function runActionCreators(action){
+                store.dispatch(action);
+            }
+
+            // Set Reducer to update the state
+            function CounterReducer(state, action){
+                if(typeof state == 'undefined'){
+                    return 0
+                }
+
+                switch(action.type){
+                    case 'INCREMENT' :
+                        return state + 1;
+                    case 'DECREMENT' :
+                        return state - 1;
+                    default:
+                        return state
+                }
+            }
+
+            // Create store from the reducer
+            var store = Redux.createStore(CounterReducer);
+
+            // Subscribe to state changes and present it, can be the slot for presentation logic
+            var element = document.getElementById('valueItem');
+
+            function render(){
+                element.innerHTML = store.getState().toString();
+            }
+
+            render();
+            store.subscribe(render);
+
+
+            // Define event listeners to initate actions on callbacks, to be done from props in react implementations
+
+            document.getElementById('increment').addEventListener('click', function(){
+                runActionCreators(INCREMENT)
+            });
+
+            document.getElementById('decrement').addEventListener('click', function(){
+                runActionCreators(DECREMENT)
+            });
+
+            document.getElementById('incrementIfOdd')
+                .addEventListener('click', function () {
+                if (store.getState() % 2 !== 0) {
+                    runActionCreators(INCREMENT)
+                }
+            });
+
+            document.getElementById('incrementAsync')
+                .addEventListener('click', function () {
+                setTimeout(function () {
+                    runActionCreators(INCREMENT)
+                }, 1000)
+            });
+
+          </script>
+    </body>
+</html>
